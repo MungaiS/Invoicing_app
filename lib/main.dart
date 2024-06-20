@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'models/invoice.dart';
+import 'screens/home_screen.dart';
 import 'screens/create_invoice_screen.dart';
 import 'screens/invoice_list_screen.dart';
 import 'screens/invoice_detail_screen.dart';
@@ -34,14 +35,15 @@ class MyApp extends StatelessWidget {
         title: 'Invoice App',
         theme: ThemeData(
           // This is the theme of your application.
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           useMaterial3: true,
         ),
         // Set the initial route of the app
         initialRoute: '/',
         // Define the routes for the app
         routes: {
-          '/': (context) => InvoiceListScreen(),
+          '/': (context) => HomeScreen(),
+          '/invoices': (context) => InvoiceListScreen(),
           '/create': (context) => CreateInvoiceScreen(),
           '/detail': (context) => InvoiceDetailScreen(invoiceIndex: ModalRoute.of(context)!.settings.arguments as int),
           '/edit': (context) => EditInvoiceScreen(invoiceIndex: ModalRoute.of(context)!.settings.arguments as int),
@@ -50,4 +52,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
+ 
