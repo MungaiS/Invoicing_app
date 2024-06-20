@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         // Define the routes for the app
         routes: {
-          '/': (context) => const MyHomePage(title: 'Invoice App Home Page'),
+          '/': (context) => InvoiceListScreen(),
           '/create': (context) => CreateInvoiceScreen(),
           '/detail': (context) => InvoiceDetailScreen(invoiceIndex: ModalRoute.of(context)!.settings.arguments as int),
           '/edit': (context) => EditInvoiceScreen(invoiceIndex: ModalRoute.of(context)!.settings.arguments as int),
@@ -50,3 +50,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
