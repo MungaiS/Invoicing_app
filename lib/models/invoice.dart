@@ -1,4 +1,3 @@
-// lib/models/invoice.dart
 import 'package:hive/hive.dart';
 
 part 'invoice.g.dart';
@@ -7,35 +6,40 @@ part 'invoice.g.dart';
 class Invoice extends HiveObject {
   @HiveField(0)
   String clientName;
+
   @HiveField(1)
-  final DateTime invoiceDate;
+  DateTime invoiceDate;
+
   @HiveField(2)
-  final List<InvoiceItem> items;
+  List<InvoiceItem> items;
+
   @HiveField(3)
-  final double taxRate;
-  @HiveField(4)
-  final double total;
+  double taxRate;
 
   Invoice({
     required this.clientName,
     required this.invoiceDate,
     required this.items,
     required this.taxRate,
-  }) : total = items.fold(
-          0.0, // Change the initial value to 0.0
-          (previousValue, element) =>
-              previousValue + (element.price * element.quantity),
-        ) * (1 + taxRate / 100);
+  });
+
+  double calculateTotal() {
+    double subtotal = items.fold(0, (sum, item) => sum + item.quantity * item.price);
+    double total = subtotal + (subtotal * taxRate / 100);
+    return total;
+  }
 }
 
 @HiveType(typeId: 1)
-class InvoiceItem {
+class InvoiceItem extends HiveObject {
   @HiveField(0)
-  final String description;
+  String description;
+
   @HiveField(1)
-  final int quantity;
+  int quantity;
+
   @HiveField(2)
-  final double price;
+  double price;
 
   InvoiceItem({
     required this.description,

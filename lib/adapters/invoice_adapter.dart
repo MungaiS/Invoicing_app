@@ -1,10 +1,5 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
-part of 'invoice.dart';
-
-// **************************************************************************
-// TypeAdapterGenerator
-// **************************************************************************
+import 'package:hive/hive.dart';
+import '../models/invoice.dart';
 
 class InvoiceAdapter extends TypeAdapter<Invoice> {
   @override
@@ -37,16 +32,6 @@ class InvoiceAdapter extends TypeAdapter<Invoice> {
       ..writeByte(3)
       ..write(obj.taxRate);
   }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is InvoiceAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
 }
 
 class InvoiceItemAdapter extends TypeAdapter<InvoiceItem> {
@@ -77,14 +62,4 @@ class InvoiceItemAdapter extends TypeAdapter<InvoiceItem> {
       ..writeByte(2)
       ..write(obj.price);
   }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is InvoiceItemAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
 }

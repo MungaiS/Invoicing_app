@@ -11,45 +11,51 @@ import 'screens/edit_invoice_screen.dart';
 import 'providers/invoice_provider.dart';
 
 void main() async {
-  // Initialize Hive for Flutter
+  WidgetsFlutterBinding.ensureInitialized();
+
   await Hive.initFlutter();
-  // Register the InvoiceAdapter for the Invoice model
   Hive.registerAdapter(InvoiceAdapter());
-  // Open a Hive box named 'invoices' to store Invoice objects
+  Hive.registerAdapter(InvoiceItemAdapter());
   await Hive.openBox<Invoice>('invoices');
 
-  // Run the app starting from the MyApp widget
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      // Create an instance of InvoiceProvider when the app starts
       create: (_) => InvoiceProvider(),
       child: MaterialApp(
         title: 'Invoice App',
         theme: ThemeData(
-          // This is the theme of your application.
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue),
           useMaterial3: true,
         ),
-        // Set the initial route of the app
         initialRoute: '/',
-        // Define the routes for the app
         routes: {
           '/': (context) => HomeScreen(),
           '/invoices': (context) => InvoiceListScreen(),
           '/create': (context) => CreateInvoiceScreen(),
-          '/detail': (context) => InvoiceDetailScreen(invoiceIndex: ModalRoute.of(context)!.settings.arguments as int),
-          '/edit': (context) => EditInvoiceScreen(invoiceIndex: ModalRoute.of(context)!.settings.arguments as int),
+          '/detail': (context) {
+            final invoiceIndex = ModalRoute.of(context)!.settings.arguments as int;
+            final invoice = Provider.of<InvoiceProvider>(context, listen: false).invoices[invoiceIndex];
+            return InvoiceDetailScreen(invoice: invoice);
+          },
+          '/edit': (context) {
+            final invoiceIndex = ModalRoute.of(context)!.settings.arguments as int?;
+            if (invoiceIndex == null) {
+              throw ArgumentError('Invoice index must not be null.');
+            }
+            final invoice = Provider.of<InvoiceProvider>(context, listen: false).invoices[invoiceIndex];
+            return EditInvoiceScreen(invoice: invoice, invoiceIndex: invoiceIndex,);
+          },
         },
       ),
     );
   }
 }
- 
+
+
