@@ -14,6 +14,25 @@ class InvoiceListScreen extends StatelessWidget {
       body: Consumer<InvoiceProvider>(
         builder: (context, invoiceProvider, child) {
           final invoices = invoiceProvider.invoices;
+          if (invoices.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.email_outlined,
+                    size: 80,
+                    color: Colors.blue.shade900,
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'No current invoices',
+                    style: TextStyle(fontSize: 18, color: Colors.blue.shade900),
+                  ),
+                ],
+              ),
+            );
+          }
           return ListView.builder(
             itemCount: invoices.length,
             itemBuilder: (context, index) {
@@ -48,3 +67,4 @@ class InvoiceListScreen extends StatelessWidget {
     );
   }
 }
+
