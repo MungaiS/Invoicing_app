@@ -3,6 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'models/invoice.dart';
+import 'screens/welcome_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/create_invoice_screen.dart';
 import 'screens/invoice_list_screen.dart';
@@ -36,7 +37,8 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
-          '/': (context) => HomeScreen(),
+          '/': (context) => WelcomeScreen(),
+          '/home': (context) => HomeScreen(),
           '/invoices': (context) => InvoiceListScreen(),
           '/create': (context) => CreateInvoiceScreen(),
           '/detail': (context) {

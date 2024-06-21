@@ -15,7 +15,7 @@ class InvoiceAdapter extends TypeAdapter<Invoice> {
       clientName: fields[0] as String,
       invoiceDate: fields[1] as DateTime,
       items: (fields[2] as List).cast<InvoiceItem>(),
-      taxRate: fields[3] as double,
+      taxRate: fields[3] as double, clientEmail: '', clientAddress: '',
     );
   }
 

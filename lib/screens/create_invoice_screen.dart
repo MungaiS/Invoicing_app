@@ -12,6 +12,8 @@ class CreateInvoiceScreen extends StatefulWidget {
 class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
   final _formKey = GlobalKey<FormState>();
   final _clientNameController = TextEditingController();
+  final _clientAddressController = TextEditingController();
+  final _clientEmailController = TextEditingController();
   final _itemDescriptionController = TextEditingController();
   final _itemQuantityController = TextEditingController();
   final _itemPriceController = TextEditingController();
@@ -23,7 +25,7 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Invoice'),
+        title: const Text('Create Invoice'),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -32,11 +34,11 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Client Information', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
+              const Text('Client Information', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 10),
               TextFormField(
                 controller: _clientNameController,
-                decoration: InputDecoration(labelText: 'Client Name'),
+                decoration: const InputDecoration(labelText: 'Client Name'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter the client name';
@@ -44,56 +46,87 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
-              Text('Invoice Items', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
+              TextFormField(
+                controller: _clientAddressController,
+                decoration: const InputDecoration(labelText: 'Client Address'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the client address';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                controller: _clientEmailController,
+                decoration: const InputDecoration(labelText: 'Client Email'),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter the client email';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              const Text('Invoice Items', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 10),
               TextFormField(
                 controller: _itemDescriptionController,
-                decoration: InputDecoration(labelText: 'Item Description'),
+                decoration: const InputDecoration(labelText: 'Item Description'),
               ),
-              TextFormField(
-                controller: _itemQuantityController,
-                decoration: InputDecoration(labelText: 'Item Quantity'),
-                keyboardType: TextInputType.number,
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _itemQuantityController,
+                      decoration: const InputDecoration(labelText: 'Item Quantity'),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: TextFormField(
+                      controller: _itemPriceController,
+                      decoration: const InputDecoration(labelText: 'Item Price'),
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      if (_itemDescriptionController.text.isNotEmpty &&
+                          _itemQuantityController.text.isNotEmpty &&
+                          _itemPriceController.text.isNotEmpty) {
+                        setState(() {
+                          _items.add(InvoiceItem(
+                            description: _itemDescriptionController.text,
+                            quantity: int.parse(_itemQuantityController.text),
+                            price: double.parse(_itemPriceController.text),
+                          ));
+                        });
+                        _itemDescriptionController.clear();
+                        _itemQuantityController.clear();
+                        _itemPriceController.clear();
+                      }
+                    },
+                    icon: const Icon(Icons.add),
+                  ),
+                ],
               ),
-              TextFormField(
-                controller: _itemPriceController,
-                decoration: InputDecoration(labelText: 'Item Price'),
-                keyboardType: TextInputType.number,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  if (_itemDescriptionController.text.isNotEmpty &&
-                      _itemQuantityController.text.isNotEmpty &&
-                      _itemPriceController.text.isNotEmpty) {
-                    setState(() {
-                      _items.add(InvoiceItem(
-                        description: _itemDescriptionController.text,
-                        quantity: int.parse(_itemQuantityController.text),
-                        price: double.parse(_itemPriceController.text),
-                      ));
-                    });
-                    _itemDescriptionController.clear();
-                    _itemQuantityController.clear();
-                    _itemPriceController.clear();
-                  }
-                },
-                child: Text('Add Item'),
-              ),
-              SizedBox(height: 20),
-              Text('Tax Information', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
+              const SizedBox(height: 20),
+              const Text('Tax Information', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 10),
               TextFormField(
                 controller: _taxRateController,
-                decoration: InputDecoration(labelText: 'Tax Rate (%)'),
+                decoration: const InputDecoration(labelText: 'Tax Rate (%)'),
                 keyboardType: TextInputType.number,
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     final newInvoice = Invoice(
                       clientName: _clientNameController.text,
+                      clientAddress: _clientAddressController.text,
+                      clientEmail: _clientEmailController.text,
                       invoiceDate: DateTime.now(),
                       items: _items,
                       taxRate: double.parse(_taxRateController.text),
@@ -103,8 +136,28 @@ class _CreateInvoiceScreenState extends State<CreateInvoiceScreen> {
                     Navigator.pop(context);
                   }
                 },
-                child: Text('Save Invoice'),
+                child: const Text('Save Invoice'),
               ),
+              const SizedBox(height: 20),
+              if (_items.isNotEmpty)
+                DataTable(
+                  columns: const [
+                    DataColumn(label: Text('Description')),
+                    DataColumn(label: Text('Quantity')),
+                    DataColumn(label: Text('Price')),
+                  ],
+                  rows: _items
+                      .map(
+                        (item) => DataRow(
+                          cells: [
+                            DataCell(Text(item.description)),
+                            DataCell(Text(item.quantity.toString())),
+                            DataCell(Text('\$${item.price.toStringAsFixed(2)}')),
+                          ],
+                        ),
+                      )
+                      .toList(),
+                ),
             ],
           ),
         ),

@@ -45,5 +45,14 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+  <string>Permission to save PDF files</string>
+  <key>NSAppUsesNonExemptEncryption</key>
+  <false/>
+  <key>NSAllowsLocalNetworking</key>
+  <true/>
 </dict>
 </plist>
+
+
+
